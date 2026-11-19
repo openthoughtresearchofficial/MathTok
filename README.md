@@ -1,7 +1,7 @@
 # MathTok-v-1.0
 **A Hybrid Canonicalized AST-Based Tokenization Framework for Mathematical Language Modeling**
 
-<<<<<<< HEAD
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Pytest](https://img.shields.io/badge/tests-118%20passed-success.svg)](tests/)
