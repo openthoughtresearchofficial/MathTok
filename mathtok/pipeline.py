@@ -148,6 +148,7 @@ class MathTokPipeline:
         self.vocab     = vocab          or MathTokVocabulary()
         self.include_metadata = include_metadata
         self.optimize_tokens  = optimize_tokens
+        self._optimizer       = None
 
     # ── Public API ────────────────────────────────────────────────────────
 
@@ -247,17 +248,17 @@ class MathTokPipeline:
 
         if self.optimize_tokens:
             # Experimental Optimization via TokenOptimizer
-            target_tokenizer = None
-            try:
-                from .optimizer import TokenOptimizer
+            if self._optimizer is None:
                 try:
                     from transformers import GPT2Tokenizer
                     target_tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
                 except Exception:
                     target_tokenizer = None
+                from .optimizer import TokenOptimizer
+                self._optimizer = TokenOptimizer(tokenizer=target_tokenizer)
 
-                optimizer = TokenOptimizer(tokenizer=target_tokenizer)
-                opt_result = optimizer.optimize(canon_result.expr)
+            try:
+                opt_result = self._optimizer.optimize(canon_result.expr)
                 optimized_rep = opt_result["optimized_representation"]
                 sexp = optimized_rep
 

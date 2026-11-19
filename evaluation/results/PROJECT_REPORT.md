@@ -30,7 +30,7 @@ Standard natural language processing tokenization algorithms—such as Byte-Pair
 | **Canonical Consistency Score (CCS)** | **0.9714** | 0.3964 (GPT-2) \| 0.5390 (SP) | **+145.1% invariance boost** | [`tokenizer_comparison_results.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/tokenizer_comparison_results.json) |
 | **Token Length Stability (TS)** | **0.9800** | 0.8241 (GPT-2) \| 0.7703 (SP) | **+18.9% length consistency** | [`tokenizer_comparison_results.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/tokenizer_comparison_results.json) |
 | **Linear Equivalence ROC-AUC** | **0.8889** (160 dims) | 0.7350 (206 dims, Text) | **+15.39 pts (+22.3% smaller space)** | [`classifier_equivalence_results.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/classifier_equivalence_results.json) |
-| **611-Expression Unified SCR** | **2.1482** | 0.9625 (GPT-2) \| 0.8647 (T5) | **+2.23x vs GPT-2 (+2.48x vs T5)** | [`all_results_4way_optimized.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/all_results_4way_optimized.json) |
+| **611-Expression Unified SCR** | **1.9552** | 0.9625 (GPT-2) \| 0.8647 (T5) | **+2.03x vs GPT-2 (+2.26x vs T5)** | [`all_results_4way_optimized.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/all_results_4way_optimized.json) |
 | **Downstream LLM Accuracy (Frozen)** | 5.56% (Pure AST) | 16.67% (Native Qwen2.5-0.5B) | Syntactic OOD penalty in frozen LLMs | [`computation_validation_summary.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/computation_validation_summary.json) |
 | **Hybrid LLM Prompt Accuracy** | **16.67%** (Top Exact) | 16.67% (Baseline A) | Rescues accuracy; gains in Equations | [`computation_validation_summary.json`](file:///c:/Users/surwe/Project/math_token/evaluation/results/computation_validation_summary.json) |
 
@@ -140,13 +140,13 @@ Evaluating across 611 mathematical expressions in [`all_results_4way_optimized.j
 
 | Model Setup | Mean Token Count | Token Reduction vs Baseline | Mean SCR (L1) | Relative SCR Advantage |
 | :--- | :---: | :---: | :---: | :---: |
-| **MathTok (Optimized)** | **39.49** | **Reference (0.0%)** | **2.1482** | **State of the Art** |
-| **GPT-2 BPE** | 53.03 | -25.5% | 0.9625 | +2.23x MathTok Lead |
-| **T5 (SentencePiece)** | 58.00 | -31.9% | 0.8647 | +2.48x MathTok Lead |
-| **BERT WordPiece** | 61.91 | -36.2% | 0.9715 | +2.21x MathTok Lead |
+| **MathTok (Optimized)** | **44.94** | **Reference (0.0%)** | **1.9552** | **State of the Art** |
+| **GPT-2 BPE** | 53.03 | -15.3% | 0.9625 | +2.03x MathTok Lead |
+| **T5 (SentencePiece)** | 58.00 | -22.5% | 0.8647 | +2.26x MathTok Lead |
+| **BERT WordPiece** | 61.91 | -27.4% | 0.9715 | +2.01x MathTok Lead |
 
 ![Mean Semantic Compression Ratio across 611 Expressions](file:///c:/Users/surwe/Project/math_token/evaluation/results/results_plot_4way_optimized.png)  
-*Figure 1: Mean Semantic Compression Ratio (SCR) across 611 benchmark expressions. MathTok (Optimized) achieves 2.148, outperforming BERT (0.972), GPT-2 (0.963), and T5 (0.865).*
+*Figure 1: Mean Semantic Compression Ratio (SCR) across 611 benchmark expressions. MathTok achieves 1.955, outperforming BERT (0.972), GPT-2 (0.963), and T5 (0.865).*
 
 ---
 

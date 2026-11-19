@@ -270,16 +270,26 @@ class HybridLexer:
                 depth -= 1
                 i += 1
             elif ch in " \t" and depth == 0:
-                # Stop at word boundary outside parens
-                # — but keep going if next char is still math-ish
-                if i + 1 < len(text) and text[i + 1] in "+-*/^=<>)":
+                # Check if previous non-whitespace char is an operator: if so, expression cannot end here
+                prev_non_space = text[start:i].rstrip()
+                if prev_non_space and prev_non_space[-1] in "+-*/^=<>,":
                     i += 1
-                else:
-                    break
+                    continue
+                # Also check if next non-whitespace char is an operator
+                j = i
+                while j < len(text) and text[j] in " \t":
+                    j += 1
+                if j < len(text) and text[j] in "+-*/^=<>":
+                    i = j
+                    continue
+                break
             elif ch in _MATH_CHARS:
                 i += 1
             else:
                 break
+
+        while i > start and text[i - 1] in " \t":
+            i -= 1
 
         return start, i
 

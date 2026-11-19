@@ -5,5 +5,6 @@
   "unk_token": "[UNK]",
   "bos_token": "[BOS]",
   "eos_token": "[EOS]",
-  "mask_token": "[MASK]"
+  "mask_token": "[MASK]",
+  "sep_token": "[SEP]"
 }

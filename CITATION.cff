@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use MathTok, please cite this software release."
+title: "MathTok: A Hybrid Canonicalized AST-Based Tokenization Framework for Mathematical Language Modeling"
+authors:
+  - family-names: "Surweesh"
+    given-names: "S P"
+version: "0.1.0"
+date-released: "2026-11-19"
+repository-code: "https://github.com/SurweeshSP/mathtok"
+license: "MIT"
+keywords:
+  - tokenization
+  - mathematics
+  - abstract-syntax-tree
+  - sympy
+  - language-models
+

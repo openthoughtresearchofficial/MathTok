@@ -109,7 +109,7 @@ class RoundTripValidator:
             return sp.Symbol("TRUNCATED")
             
         # Recursive case
-        children = [self._build_expr(cid, node_map) for cid in meta.children_ids]
+        children = [self._build_expr(cid, node_map) for cid in meta.children_ids if cid >= 0]
         
         if meta.token == "FRAC":
             return sp.Rational(children[0], children[1])
@@ -126,12 +126,12 @@ class RoundTripValidator:
 
         # Fallback functions
         if meta.token.startswith("FUNC_"):
-            cls_name = meta.token[5:].capitalize()
+            cls_name = meta.token[5:].lower()
             cls = getattr(sp, cls_name, None)
             if cls:
                 return cls(*children)
             else:
-                return sp.Function(meta.token[5:].lower())(*children)
+                return sp.Function(cls_name)(*children)
 
         # Unknown
         return sp.Symbol(f"UNKNOWN_{meta.token}")
