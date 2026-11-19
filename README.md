@@ -1,5 +1,4 @@
-# MathTok
-
+# MathTok-v-1.0
 **A Hybrid Canonicalized AST-Based Tokenization Framework for Mathematical Language Modeling**
 
 <<<<<<< HEAD
