@@ -2,7 +2,10 @@
 Tests for the Semantic Tokenizer Comparison Framework.
 """
 
+<<<<<<< HEAD
 import math
+=======
+>>>>>>> origin/main
 import pytest
 from evaluation.comparison import (
     TokenizerStats, ComparisonRecord, TokenizerComparison,
@@ -35,10 +38,16 @@ class TestTokenizerStats:
             canonical_bonus=2,
         )
         stats.compute_scr()
+<<<<<<< HEAD
         expected_si = 1 + 1 + 0 + 2 + math.log1p(1)  # O + R + F + C + log1p(D)
         assert abs(stats.structural_score - expected_si) < 1e-6
         assert abs(stats.raw_scr - expected_si / 3) < 1e-6
         assert abs(stats.structural_efficiency - expected_si / 3) < 1e-6
+=======
+        assert stats.structural_score == 5          # 1+1+1+0+2
+        assert abs(stats.raw_scr - 5/3) < 1e-9
+        assert abs(stats.structural_efficiency - 1/3) < 1e-9
+>>>>>>> origin/main
 
     def test_zero_token_count_safe(self):
         stats = TokenizerStats(name="empty", tokens=[], token_count=0)

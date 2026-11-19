@@ -65,6 +65,7 @@ logger = logging.getLogger(__name__)
 _RESULTS_DIR = Path(__file__).parent / "results"
 
 
+<<<<<<< HEAD
 _DATA_DIR = Path(__file__).parent / "datasets"
 _UNIFIED_FILE = _DATA_DIR / "unified_dataset.json"
 
@@ -111,6 +112,79 @@ if not MIXED_TEXT_MATH:
         "The area of a circle of radius r is pi*r^2.",
         "Euler's identity: $e^{i\\pi} + 1 = 0$.",
     ]
+=======
+# ── Test suites ───────────────────────────────────────────────────────────
+
+STANDARD_EXPRESSIONS = [
+    "(x+1)^2",
+    "sin(x^2) + 3*x",
+    "x^2 + 2*x + 1",
+    "exp(-x^2/2)",
+    "1/(1 + exp(-x))",
+    "log(x*y)",
+    "sqrt(a^2 + b^2)",
+    "n*(n+1)/2",
+    "factorial(n)",
+    "diff(sin(x), x)",
+    "integrate(x^2, x)",
+    "limit(sin(x)/x, x, 0)",
+    "a^2 - b^2",
+    "(-b + sqrt(b^2 - 4*a*c)) / (2*a)",
+    "sum(k^2, k, 1, n)",
+]
+
+DEEP_NESTING_EXPRESSIONS = [
+    "sin(cos(x^2 + 1))",
+    "sin(cos((x+1)^2 + y^3))",
+    "exp(log(sin(x^2 + cos(y))))",
+    "sqrt(1 + sqrt(1 + sqrt(x)))",
+    "log(1 + log(1 + x))",
+    "((x+1)^2 + (y-1)^2)^3",
+    "((a + b)*(a - b)) / ((a + b)^2)",
+]
+
+ODE_PDE_EXPRESSIONS = [
+    "Derivative(f(x), x, 2) + 2*Derivative(f(x), x) + f(x)",
+    "Derivative(u(x, t), t) - alpha * Derivative(u(x, t), x, 2)",
+]
+
+MATRIX_LINEAR_ALGEBRA = [
+    "A*x + b",
+    "det(A - lambda*I)",
+]
+
+PROBABILITY_EXPRESSIONS = [
+    "P(A|B) * P(B) / P(A)",
+    "exp(-x^2 / 2) / sqrt(2*pi)",
+]
+
+SET_THEORY = [
+    "Union(A, B)",
+    "Intersection(A, B)",
+]
+
+CANONICAL_PAIRS = [
+    ("x + 2",            "2 + x"),
+    ("a*b + a*c",        "a*(b+c)"),
+    ("(x+1)^2",          "x^2 + 2*x + 1"),
+    ("x^2 - y^2",        "(x+y)*(x-y)"),
+    ("sin(x)^2 + cos(x)^2", "1"),
+    ("2*x + 2*y",        "2*(x+y)"),
+    ("x*y + x*z",        "x*(y+z)"),
+    ("a^2 + 2*a*b + b^2","(a+b)^2"),
+]
+
+MIXED_TEXT_MATH = [
+    "The derivative of sin(x^2) with respect to x.",
+    "Solve for x when x^2 + 2*x + 1 = 0.",
+    "The quadratic formula gives $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.",
+    "For $n \\geq 1$, the sum $\\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$.",
+    "Integrate $\\int_0^1 x^2 dx$ to get $\\frac{1}{3}$.",
+    "If $a > 0$ and $b > 0$ then $\\log(a) + \\log(b) = \\log(ab)$.",
+    "The area of a circle of radius r is pi*r^2.",
+    "Euler's identity: $e^{i\\pi} + 1 = 0$.",
+]
+>>>>>>> origin/main
 
 LATEX_ASCII_PAIRS = [
     ("sin(x^2)",         "\\sin(x^2)"),
@@ -124,6 +198,7 @@ LATEX_ASCII_PAIRS = [
 ]
 
 
+<<<<<<< HEAD
 
 from .metrics import (
     EvaluationReport, MetricResult,
@@ -137,6 +212,8 @@ from .metrics import (
     compute_structural_information
 )
 
+=======
+>>>>>>> origin/main
 # ── Result dataclasses ────────────────────────────────────────────────────
 
 @dataclass
@@ -157,6 +234,7 @@ class TokenizerStats:
     structural_score:      float = 0.0
     raw_scr:               float = 0.0   # structural_score / token_count
     semantic_density:      float = 0.0   # math tokens / total tokens
+<<<<<<< HEAD
     structural_efficiency: float = 0.0   # SI(E) / Token Count (identical to raw_scr)
 
     def compute_scr(self, alpha=1.0, beta=1.0, gamma=1.0, delta=1.0, epsilon=1.0) -> None:
@@ -167,12 +245,30 @@ class TokenizerStats:
             function_scope=self.function_scope,
             canonical_bonus=self.canonical_bonus,
             alpha=alpha, beta=beta, gamma=gamma, delta=delta, epsilon=epsilon
+=======
+    structural_efficiency: float = 0.0   # parent_child_relations / token_count
+
+    def compute_scr(self) -> None:
+        self.structural_score = (
+            self.operator_nodes
+            + self.tree_depth
+            + self.parent_child_relations
+            + self.function_scope
+            + self.canonical_bonus
+>>>>>>> origin/main
         )
         self.raw_scr = (
             self.structural_score / self.token_count
             if self.token_count > 0 else 0.0
         )
+<<<<<<< HEAD
         self.structural_efficiency = self.raw_scr
+=======
+        self.structural_efficiency = (
+            self.parent_child_relations / self.token_count
+            if self.token_count > 0 else 0.0
+        )
+>>>>>>> origin/main
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -209,6 +305,7 @@ class ComparisonRecord:
         if self.char_level.raw_scr == 0:
             return 0.0
         return self.mathtok.raw_scr / self.char_level.raw_scr
+<<<<<<< HEAD
         
     @property
     def tdr_vs_gpt2(self) -> Optional[float]:
@@ -227,6 +324,8 @@ class ComparisonRecord:
         if self.char_level.token_count == 0:
             return 0.0
         return self.mathtok.token_count / self.char_level.token_count
+=======
+>>>>>>> origin/main
 
     def to_dict(self) -> dict:
         return {
@@ -240,9 +339,12 @@ class ComparisonRecord:
             "scr_improvement_vs_gpt2": self.scr_improvement_vs_gpt2,
             "scr_improvement_vs_sp":   self.scr_improvement_vs_sp,
             "scr_improvement_vs_char": self.scr_improvement_vs_char,
+<<<<<<< HEAD
             "tdr_vs_gpt2":            self.tdr_vs_gpt2,
             "tdr_vs_sp":              self.tdr_vs_sp,
             "tdr_vs_char":            self.tdr_vs_char,
+=======
+>>>>>>> origin/main
             "notes":                  self.notes,
         }
 
@@ -438,9 +540,19 @@ def _get_trained_sp_tokenizer() -> Optional[Callable[[str], list[str]]]:
         
         # Collect all expressions from our suites to form a corpus
         corpus = []
+<<<<<<< HEAD
         corpus.extend(UNIFIED_EXPRESSIONS)
         for a, b in CANONICAL_PAIRS:
 
+=======
+        corpus.extend(STANDARD_EXPRESSIONS)
+        corpus.extend(DEEP_NESTING_EXPRESSIONS)
+        corpus.extend(ODE_PDE_EXPRESSIONS)
+        corpus.extend(MATRIX_LINEAR_ALGEBRA)
+        corpus.extend(PROBABILITY_EXPRESSIONS)
+        corpus.extend(SET_THEORY)
+        for a, b in CANONICAL_PAIRS:
+>>>>>>> origin/main
             corpus.extend([a, b])
         corpus.extend(MIXED_TEXT_MATH)
         for a, b in LATEX_ASCII_PAIRS:
@@ -513,8 +625,17 @@ class TokenizerComparison:
         print("  MathTok Semantic Tokenizer Comparison")
         print("=" * 80)
 
+<<<<<<< HEAD
         self._run_category("unified", UNIFIED_EXPRESSIONS)
 
+=======
+        self._run_category("standard",    STANDARD_EXPRESSIONS)
+        self._run_category("deep_nesting", DEEP_NESTING_EXPRESSIONS)
+        self._run_category("ode_pde", ODE_PDE_EXPRESSIONS)
+        self._run_category("linear_algebra", MATRIX_LINEAR_ALGEBRA)
+        self._run_category("probability", PROBABILITY_EXPRESSIONS)
+        self._run_category("set_theory", SET_THEORY)
+>>>>>>> origin/main
         self._run_canonical_equivalence()
         self._run_mixed_text_math()
         self._run_latex_vs_ascii()
@@ -528,8 +649,17 @@ class TokenizerComparison:
     def run_category(self, category: str) -> list[ComparisonRecord]:
         """Run a single named category."""
         categories = {
+<<<<<<< HEAD
             "unified":     (self._run_category, ("unified", UNIFIED_EXPRESSIONS)),
 
+=======
+            "standard":    (self._run_category, ("standard",    STANDARD_EXPRESSIONS)),
+            "deep":        (self._run_category, ("deep_nesting", DEEP_NESTING_EXPRESSIONS)),
+            "ode_pde":     (self._run_category, ("ode_pde", ODE_PDE_EXPRESSIONS)),
+            "linear":      (self._run_category, ("linear_algebra", MATRIX_LINEAR_ALGEBRA)),
+            "probability": (self._run_category, ("probability", PROBABILITY_EXPRESSIONS)),
+            "set_theory":  (self._run_category, ("set_theory", SET_THEORY)),
+>>>>>>> origin/main
             "canonical":   (self._run_canonical_equivalence, ()),
             "mixed":       (self._run_mixed_text_math, ()),
             "latex_ascii": (self._run_latex_vs_ascii, ()),

@@ -76,6 +76,7 @@ class EvaluationReport:
         }
 
 
+<<<<<<< HEAD
 # ── Metric 1: Structural Information (SI) & Canonical SCR ────────────────
 
 def compute_structural_information(
@@ -126,6 +127,40 @@ def structural_compression_ratio(
         details={
             "min": min(ratios) if ratios else 0,
             "max": max(ratios) if ratios else 0,
+=======
+# ── Metric 1: Structural Compression Ratio (SCR) ─────────────────────────
+
+def structural_compression_ratio(
+    expressions: list[str],
+    tokenized_lengths: list[int],
+) -> MetricResult:
+    """
+    SCR = mean( |AST_tokens| / |raw_chars| )
+
+    Measures how efficiently the structural token stream represents the
+    information content relative to raw character count.
+    Lower SCR = more compressed.  A ratio < 1.0 indicates compression.
+
+    Parameters
+    ----------
+    expressions       : list of raw input expression strings
+    tokenized_lengths : list of token counts output by MathTok
+    """
+    assert len(expressions) == len(tokenized_lengths), "Length mismatch"
+    ratios = []
+    for expr, tlen in zip(expressions, tokenized_lengths):
+        char_len = max(len(expr), 1)
+        ratios.append(tlen / char_len)
+
+    mean_scr = sum(ratios) / len(ratios)
+    return MetricResult(
+        name="SCR",
+        value=mean_scr,
+        description="Structural Compression Ratio (tokens / chars); lower = more compressed",
+        details={
+            "min": min(ratios),
+            "max": max(ratios),
+>>>>>>> origin/main
             "std": _std(ratios),
             "n":   len(ratios),
         },
@@ -139,24 +174,36 @@ def canonical_consistency_score(
     tokenize_fn: Callable[[str], list[str]],
 ) -> MetricResult:
     """
+<<<<<<< HEAD
     CCS = Equivalent forms mapped identically / Total equivalent forms
 
     Measures the fraction of mathematically equivalent expressions that are
     tokenized into identically identical sets of tokens (excluding boundary tokens).
     CCS -> 1.0 means perfect consistency.
+=======
+    CCS = mean( Jaccard(tokens_A, tokens_B) )  over equivalent pairs.
+
+    Measures how similar the token streams are for mathematically
+    equivalent expressions.  CCS → 1.0 means perfect consistency.
+>>>>>>> origin/main
 
     Parameters
     ----------
     equivalent_pairs : list of (expr_A, expr_B) that are mathematically equal
     tokenize_fn      : function str → list[str] (the tokenizer under test)
     """
+<<<<<<< HEAD
     identical_count = 0
     total = len(equivalent_pairs)
     
+=======
+    scores = []
+>>>>>>> origin/main
     for expr_a, expr_b in equivalent_pairs:
         try:
             toks_a = set(tokenize_fn(expr_a))
             toks_b = set(tokenize_fn(expr_b))
+<<<<<<< HEAD
             # Remove boundary tokens
             toks_a = {t for t in toks_a if not t.startswith("[")}
             toks_b = {t for t in toks_b if not t.startswith("[")}
@@ -176,6 +223,30 @@ def canonical_consistency_score(
 
 
 
+=======
+            # Remove boundary tokens from Jaccard
+            toks_a = {t for t in toks_a if not t.startswith("[")  }
+            toks_b = {t for t in toks_b if not t.startswith("[")  }
+            if not toks_a and not toks_b:
+                scores.append(1.0)
+            else:
+                intersection = len(toks_a & toks_b)
+                union        = len(toks_a | toks_b)
+                scores.append(intersection / union if union > 0 else 0.0)
+        except Exception as exc:
+            logger.debug("CCS: failed on pair (%s, %s): %s", expr_a[:30], expr_b[:30], exc)
+            scores.append(0.0)
+
+    mean_ccs = sum(scores) / len(scores) if scores else 0.0
+    return MetricResult(
+        name="CCS",
+        value=mean_ccs,
+        description="Canonical Consistency Score — Jaccard overlap for equivalent forms (higher is better)",
+        details={"scores": scores[:20], "n": len(scores), "std": _std(scores)},
+    )
+
+
+>>>>>>> origin/main
 # ── Metric 3: Operator Preservation Score (OPS) ──────────────────────────
 
 def operator_preservation_score(

@@ -125,7 +125,10 @@ class MathTokVocabulary:
         self._math_vocab: dict[str, int] = _build_fixed_vocab()
         self._ids_to_tokens: dict[int, str] = {v: k for k, v in self._math_vocab.items()}
         self._bpe_tokenizer = None          # HF tokenizers.Tokenizer for text
+<<<<<<< HEAD
         self._hf_text_tokenizer = None     # Pretrained HF tokenizer fallback
+=======
+>>>>>>> origin/main
         self._bpe_offset    = len(self._math_vocab)   # BPE IDs start here
 
     # ── Properties ───────────────────────────────────────────────────────
@@ -136,11 +139,17 @@ class MathTokVocabulary:
 
     @property
     def total_vocab_size(self) -> int:
+<<<<<<< HEAD
         if self._bpe_tokenizer is not None:
             return self.math_vocab_size + len(self._bpe_tokenizer.get_vocab())
         if self._hf_text_tokenizer is not None:
             return self.math_vocab_size + len(self._hf_text_tokenizer)
         return self.math_vocab_size
+=======
+        if self._bpe_tokenizer is None:
+            return self.math_vocab_size
+        return self.math_vocab_size + len(self._bpe_tokenizer.get_vocab())
+>>>>>>> origin/main
 
     def get_vocab(self) -> dict[str, int]:
         """Return the complete merged vocabulary."""
@@ -162,10 +171,13 @@ class MathTokVocabulary:
             bpe_id = self._bpe_tokenizer.token_to_id(token)
             if bpe_id is not None:
                 return self._bpe_offset + bpe_id
+<<<<<<< HEAD
         if self._hf_text_tokenizer is not None:
             ids = self._hf_text_tokenizer.encode(token, add_special_tokens=False)
             if len(ids) == 1:
                 return self._bpe_offset + ids[0]
+=======
+>>>>>>> origin/main
         return self._math_vocab["[UNK]"]
 
     def id_to_token(self, idx: int) -> str:
@@ -178,12 +190,15 @@ class MathTokVocabulary:
                 tok = self._bpe_tokenizer.id_to_token(bpe_idx)
                 if tok is not None:
                     return tok
+<<<<<<< HEAD
         if self._hf_text_tokenizer is not None:
             bpe_idx = idx - self._bpe_offset
             if bpe_idx >= 0:
                 tok = self._hf_text_tokenizer.decode([bpe_idx])
                 if tok:
                     return tok
+=======
+>>>>>>> origin/main
         return "[UNK]"
 
     def encode_text(self, text: str) -> list[int]:
@@ -191,9 +206,12 @@ class MathTokVocabulary:
         if self._bpe_tokenizer is not None:
             enc = self._bpe_tokenizer.encode(text)
             return [self._bpe_offset + i for i in enc.ids]
+<<<<<<< HEAD
         if self._hf_text_tokenizer is not None:
             ids = self._hf_text_tokenizer.encode(text, add_special_tokens=False)
             return [self._bpe_offset + i for i in ids]
+=======
+>>>>>>> origin/main
         # Character-level fallback
         return [self.token_to_id(ch) for ch in text]
 
@@ -269,10 +287,15 @@ class MathTokVocabulary:
             json.dump(self._math_vocab, f, indent=2)
 
         if self._bpe_tokenizer is not None:
+<<<<<<< HEAD
             try:
                 self._bpe_tokenizer.save(str(dirpath / "tokenizer.json"))
             except Exception as exc:
                 logger.warning("Could not save BPE tokenizer: %s", exc)
+=======
+            merges_path = dirpath / self.MERGES_FILE
+            self._bpe_tokenizer.model.save(str(dirpath))
+>>>>>>> origin/main
         logger.info("Vocabulary saved to %s", dirpath)
 
     @classmethod
@@ -288,6 +311,7 @@ class MathTokVocabulary:
         instance._bpe_offset    = len(instance._math_vocab)
 
         # Try loading BPE if present
+<<<<<<< HEAD
         tok_json_path = dirpath / "tokenizer.json"
         bpe_path = dirpath / "vocab.json"
         if tok_json_path.exists():
@@ -300,6 +324,13 @@ class MathTokVocabulary:
             try:
                 from tokenizers import Tokenizer
                 instance._bpe_tokenizer = Tokenizer.from_file(str(bpe_path))
+=======
+        bpe_path = dirpath / "vocab.json"
+        if bpe_path.exists():
+            try:
+                from tokenizers import Tokenizer
+                instance._bpe_tokenizer = Tokenizer.from_file(str(dirpath / "tokenizer.json"))
+>>>>>>> origin/main
             except Exception as exc:
                 logger.warning("Could not load BPE tokenizer: %s", exc)
 
@@ -338,6 +369,7 @@ class MathTokHFTokenizer:
 
     def __init__(self, vocab: MathTokVocabulary, pipeline=None) -> None:
         self.vocab    = vocab
+<<<<<<< HEAD
         if pipeline is None:
             try:
                 from .pipeline import MathTokPipeline
@@ -346,6 +378,9 @@ class MathTokHFTokenizer:
                 self.pipeline = None
         else:
             self.pipeline = pipeline
+=======
+        self.pipeline = pipeline
+>>>>>>> origin/main
 
         # HF-compatible special token IDs
         self.pad_token    = "[PAD]"
@@ -427,11 +462,15 @@ class MathTokHFTokenizer:
             "bos_token":  self.bos_token,
             "eos_token":  self.eos_token,
             "mask_token": self.mask_token,
+<<<<<<< HEAD
             "sep_token":  self.sep_token,
+=======
+>>>>>>> origin/main
         }
         config_path = Path(save_directory) / "tokenizer_config.json"
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
+<<<<<<< HEAD
 
         special_map = {
             "pad_token":  self.pad_token,
@@ -445,6 +484,8 @@ class MathTokHFTokenizer:
         with open(map_path, "w", encoding="utf-8") as f:
             json.dump(special_map, f, indent=2)
 
+=======
+>>>>>>> origin/main
         logger.info("HF tokenizer saved to %s", save_directory)
 
     @classmethod
