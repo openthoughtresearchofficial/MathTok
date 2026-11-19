@@ -24,10 +24,6 @@ from typing import Callable
 from mathtok.pipeline import MathTokPipeline
 from .metrics import (
     EvaluationReport, MetricResult,
-<<<<<<< HEAD
-    compute_structural_information,
-=======
->>>>>>> origin/main
     structural_compression_ratio,
     canonical_consistency_score,
     operator_preservation_score,
@@ -39,13 +35,7 @@ from .metrics import (
 
 logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
-_DATASET_PATH = Path(__file__).parent / "datasets" / "unified_dataset.json"
-if not _DATASET_PATH.exists():
-    _DATASET_PATH = Path(__file__).parent / "datasets" / "sample_problems.json"
-=======
 _DATASET_PATH = Path(__file__).parent / "datasets" / "sample_problems.json"
->>>>>>> origin/main
 
 
 # ── Dataset loading ───────────────────────────────────────────────────────
@@ -102,31 +92,6 @@ class MathTokBenchmark:
         # ── SCR ──────────────────────────────────────────────────────────
         print("  Computing SCR...")
         tok_lengths = []
-<<<<<<< HEAD
-        si_values = []
-        for expr in exprs:
-            try:
-                out = self.pipeline.encode_math_only(expr)
-                tokens = [t for t in out.tokens if t not in ("[MATH_START]", "[MATH_END]")]
-                tok_lengths.append(max(len(tokens), 1))
-                op_nodes = sum(1 for t in tokens if t.startswith("OP_") or t == "FRAC" or t.startswith("FUNC_"))
-                fn_scope = sum(1 for t in tokens if t.startswith("FUNC_"))
-                depth = max((m.depth for m in out.metadata if m.depth is not None), default=0)
-                pc_rels = sum(1 for m in out.metadata if not m.is_leaf)
-                c_bonus = 2 if (out.canon_results and out.canon_results[0].success) else 0
-                si = compute_structural_information(
-                    operator_nodes=op_nodes,
-                    tree_depth=depth,
-                    parent_child_relations=pc_rels,
-                    function_scope=fn_scope,
-                    canonical_bonus=c_bonus,
-                )
-                si_values.append(si)
-            except Exception:
-                tok_lengths.append(1)
-                si_values.append(0.0)
-        scr = structural_compression_ratio(si_values, tok_lengths)
-=======
         for expr in exprs:
             try:
                 out = self.pipeline.encode_math_only(expr)
@@ -134,7 +99,6 @@ class MathTokBenchmark:
             except Exception:
                 tok_lengths.append(0)
         scr = structural_compression_ratio(exprs, tok_lengths)
->>>>>>> origin/main
 
         # ── CCS ──────────────────────────────────────────────────────────
         print("  Computing CCS...")

@@ -12,9 +12,5 @@ venv/
 
 .ipynb_checkpoints/
 
-<<<<<<< HEAD
 evaluation/results/*.json
 evaluation/results/*.png
-=======
-evaluation/results/*.json
->>>>>>> origin/main

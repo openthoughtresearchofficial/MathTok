@@ -3,7 +3,7 @@
 ### Model Details
 - **Model Name:** MathTok-0.1
 - **Organization:** Open Thought Research
-- **Repository:** https://github.com/SurweeshSP/mathtok
+- **Repository:** https://github.com/openthoughtresearchofficial/MathTok
 - **Release Target:** OpenThoughtResearch/MathTok-0.1
 - **Model Type:** Hybrid symbolic/structural mathematical tokenizer and representation pipeline.
 - **Date:** 19 November 2026

@@ -6,7 +6,7 @@ authors:
     given-names: "S P"
 version: "0.1.0"
 date-released: "2026-11-19"
-repository-code: "https://github.com/SurweeshSP/mathtok"
+repository-code: "https://github.com/openthoughtresearchofficial/MathTok"
 license: "MIT"
 keywords:
   - tokenization
